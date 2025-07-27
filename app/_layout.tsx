@@ -1,29 +1,71 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { getFilms, getLocations, getPeople, getSpecies, getVehicles } from "@/api";
+import { useStore } from "@/store";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useFonts } from "expo-font";
+import { Stack, useRouter } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useMemo } from "react";
+import { Appearance, View } from "react-native";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+SplashScreen.preventAutoHideAsync();
+// always set to light theme
+Appearance.setColorScheme("light");
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    antoutline: require("@ant-design/icons-react-native/fonts/antoutline.ttf"),
   });
+  const router = useRouter();
+  const { setFilms, setPeople, setSpecies, setVehicles, setLocations } = useStore();
+
+  const tasks = useMemo(
+    () => [
+      getFilms().then(setFilms),
+      getPeople().then(setPeople),
+      getSpecies().then(setSpecies),
+      getVehicles().then(setVehicles),
+      getLocations().then(setLocations),
+    ],
+    [setFilms, setLocations, setPeople, setSpecies, setVehicles]
+  );
+
+  // preload all data and store in zustand
+  useEffect(() => {
+    Promise.allSettled(tasks);
+  }, [tasks]);
 
   if (!loaded) {
-    // Async font loading only occurs in development.
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+    <View
+      style={{ flex: 1, backgroundColor: "#f5f5f5" }}
+      onLayout={() => {
+        if (loaded) {
+          SplashScreen.hide();
+        }
+      }}
+    >
+      <Stack
+        screenOptions={{
+          headerRight: () => (
+            <Ionicons
+              onPress={() => {
+                router.navigate("/");
+              }}
+              name="home-outline"
+              size={19}
+              color="#108ee9"
+            />
+          ),
+        }}
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false, headerTitle: "Back" }} />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+
+      <StatusBar style="light" />
+    </View>
   );
 }

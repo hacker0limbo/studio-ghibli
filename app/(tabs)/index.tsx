@@ -1,75 +1,138 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import {
+  Card,
+  Carousel,
+  Grid,
+  Icon,
+  List,
+  WhiteSpace,
+  WingBlank,
+  type IconProps,
+} from "@ant-design/react-native";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useRouter, type Href } from "expo-router";
+import { Image, Linking, ScrollView, View } from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const externalLinks = [
+  {
+    text: "Studio Ghibli",
+    url: "https://www.ghibli.jp/",
+  },
+  {
+    text: "Ghibli Park",
+    url: "https://ghibli-park.jp/",
+  },
+  {
+    text: "Ghibli Museum",
+    url: "https://ghibli-museum.jp/",
+  },
+];
 
-export default function HomeScreen() {
+type Category = { text: string; iconName: IconProps["name"]; route: Href };
+
+const categories: Category[] = [
+  { text: "Films", iconName: "video-camera", route: "/films" },
+  { text: "People", iconName: "user", route: "/people" },
+  { text: "Locations", iconName: "environment", route: "/locations" },
+  { text: "Species", iconName: "team", route: "/species" },
+  { text: "Vehicles", iconName: "car", route: "/vehicles" },
+];
+
+export default function Index() {
+  const router = useRouter();
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={{ flex: 1 }}>
+      <ScrollView>
+        <WhiteSpace size="lg" />
+        <WingBlank>
+          <Carousel style={{ height: 150, width: "100%" }} autoplay infinite>
+            <Image
+              style={{ resizeMode: "cover", height: "100%", width: "100%" }}
+              source={require("@/assets/images/carousel/howl.jpg")}
+            />
+            <Image
+              style={{ resizeMode: "cover", height: "100%", width: "100%" }}
+              source={require("@/assets/images/carousel/laputa.jpg")}
+            />
+            <Image
+              style={{ resizeMode: "cover", height: "100%", width: "100%" }}
+              source={require("@/assets/images/carousel/ponyo.jpg")}
+            />
+            <Image
+              style={{ resizeMode: "cover", height: "100%", width: "100%" }}
+              source={require("@/assets/images/carousel/spirited-away.jpg")}
+            />
+            <Image
+              style={{ resizeMode: "cover", height: "100%", width: "100%" }}
+              source={require("@/assets/images/carousel/the-wind-rises.jpg")}
+            />
+          </Carousel>
+        </WingBlank>
+
+        <WhiteSpace size="lg" />
+        <WingBlank>
+          <Card>
+            <Card.Header
+              title="Categories"
+              thumb={
+                <MaterialIcons
+                  name="category"
+                  size={24}
+                  color="#108ee9"
+                  style={{ marginRight: 4 }}
+                />
+              }
+            />
+            <Card.Body>
+              <Grid
+                hasLine={false}
+                onPress={(el, index) => {
+                  const categoryToNavigate = categories[index ?? 0];
+                  router.navigate(categoryToNavigate.route);
+                }}
+                data={categories.map(({ text, iconName, route }) => ({
+                  text,
+                  icon: <Icon name={iconName} color="#108ee9" />,
+                  onPress: () => router.navigate(route),
+                }))}
+              />
+            </Card.Body>
+          </Card>
+        </WingBlank>
+
+        <WhiteSpace size="lg" />
+        <WingBlank>
+          <Card>
+            <Card.Header
+              title="Websites"
+              thumb={
+                <MaterialCommunityIcons
+                  name="web"
+                  size={24}
+                  color="#108ee9"
+                  style={{ marginRight: 4 }}
+                />
+              }
+            />
+            <Card.Body>
+              <List>
+                {externalLinks.map((link, index) => (
+                  <List.Item
+                    key={index}
+                    onPress={() => Linking.openURL(link.url)}
+                    // arrow="horizontal"
+                    extra={<EvilIcons name="external-link" size={32} color="grey" />}
+                  >
+                    {link.text}
+                  </List.Item>
+                ))}
+              </List>
+            </Card.Body>
+          </Card>
+        </WingBlank>
+      </ScrollView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
