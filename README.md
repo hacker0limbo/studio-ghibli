@@ -2,14 +2,14 @@
 
 A learning-oriented app built with React Native primarily using Expo and TypeScript.
 
-## Screenshots
-
-<img src="./demos/home.PNG" alt="home" width="250" />
-<img src="./demos/settings.PNG" alt="settings" width="250" />
-<img src="./demos/films.PNG" alt="films" width="250" />
-<img src="./demos/film.PNG" alt="film" width="250" />
-<img src="./demos/people.PNG" alt="people" width="250" />
-<img src="./demos/person.PNG" alt="person" width="250" />
+<p>
+  <img src="./demos/home.PNG" alt="home" width="250" />
+  <img src="./demos/settings.PNG" alt="settings" width="250" />
+  <img src="./demos/films.PNG" alt="films" width="250" />
+  <img src="./demos/film.PNG" alt="film" width="250" />
+  <img src="./demos/people.PNG" alt="people" width="250" />
+  <img src="./demos/person.PNG" alt="person" width="250" />
+</p>
 
 ## Preview
 
