@@ -25,7 +25,13 @@ export default function Settings() {
           >
             About
           </List.Item>
-          <List.Item extra="Github" arrow="horizontal" onPress={() => {}}>
+          <List.Item
+            extra="Github"
+            arrow="horizontal"
+            onPress={() => {
+              Linking.openURL("https://github.com/hacker0limbo/studio-ghibli");
+            }}
+          >
             Source Code
           </List.Item>
           <List.Item
